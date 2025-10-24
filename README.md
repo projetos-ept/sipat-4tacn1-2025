@@ -1,11 +1,11 @@
-# 🚧 SIPAT 2025 - 4TACN1 - [Nome do Projeto/Tema Principal]
+# 🚧 SIPAT 2025 - 4TACN1 - [ Como Funciona o Teste de Sorologia com Inteligência Artificial]
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Status do Projeto](https://img.shields.io/badge/status-Em%20Andamento-yellow.svg)](https://projetos-ept.github.io/sipat-4tacn1-2025/)
 
 ## 📝 Descrição
 
-Este repositório contém os materiais, informações e/ou o projeto desenvolvido pela turma **4TACN1** (Técnico em [Nome do Curso]) no âmbito da **Semana Interna de Prevenção de Acidentes de Trabalho (SIPAT)**, que ocorrerá em 2025.
+Este repositório contém os materiais, informações e/ou o projeto desenvolvido pela turma **4TACN1** (Técnico em Análises Clínias) no âmbito da **Semana Interna de Prevenção de Acidentes de Trabalho (SIPAT)**, que ocorrerá em 2025.
 
 O projeto tem como objetivo:
 * [Ex: Conscientizar os alunos e colaboradores sobre a importância da segurança no ambiente de trabalho/estudo.]
