@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Funciona o Teste de Sorologia com Inteligência Artificial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr; /* Largura da Sidebar mantida */
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .concept-card h3 {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* Estilos específicos para os novos cartões para manter a consistência */
+        .concept-card-content h3 {
+             /* H3 dos novos cartões: garantindo que sigam o padrão do h3 do concept-card */
+            font-size: 1.3rem; 
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .concept-card-content p {
+            /* P dos novos cartões: usando o estilo similar ao 'small' ou parágrafos laterais existentes */
+            color: #555;
+            line-height: 1.5;
+            font-size: 0.95em; /* Um pouco menor para caber melhor na sidebar */
+        }
+        
+        .new-card-title {
+            /* Ajuste visual para ícones nos títulos dos novos cartões */
+            margin-right: 5px; 
+            font-size: 1.3em;
+        }
+
+
+        .concept-item {
+            margin: 15px 0;
+            padding: 12px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .concept-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .concept-item strong {
+            display: block;
+            color: #667eea;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .concept-item small {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .status-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .status-box > div {
+            margin: 5px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            animation: fadeInDown 0.8s ease;
+            grid-column: 1 / -1;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .main-panel {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .simulation-title {
+            text-align: center;
+            font-size: 2em;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .simulation-subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        /* Flow Steps */
+        .flow-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .flow-container::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, #e2e8f0, #cbd5e0);
+            z-index: 0;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+            opacity: 0.4;
+        }
+
+        .flow-step.active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .flow-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 10px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border: 4px solid #e2e8f0;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .flow-step.active .flow-icon {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        .flow-label {
+            font-weight: bold;
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+
+        /* Start Button */
+        .start-button {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 40px;
+            padding: 20px 40px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .start-button:hover:not(:disabled)::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .start-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .start-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Test Area */
+        .test-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .test-plate-container {
+            background: linear-gradient(135deg, #f8f9ff, #e6f3ff);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #667eea;
+        }
+
+        .test-plate-container h3 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .test-explanation {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .antigen-labels {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .antigen-tag {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .test-plate {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+        }
+
+        .test-plate.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .test-spot {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #dee2e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: bold;
+            background: white;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: default;
+            color: #adb5bd;
+        }
+
+        .test-spot.positive {
+            background: radial-gradient(circle, #48bb78, #38a169);
+            color: white;
+            border-color: #2f855a;
+            box-shadow: 0 0 20px rgba(72, 187, 120, 0.6);
+            animation: spotGlow 2s infinite;
+        }
+
+        @keyframes spotGlow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(72, 187, 120, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(72, 187, 120, 0.9);
+            }
+        }
+
+        .test-spot.negative {
+            background: #f1f3f5;
+            color: #868e96;
+            border-color: #ced4da;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.9em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.positive {
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+
+        .legend-dot.negative {
+            background: #f1f3f5;
+            border: 2px solid #ced4da;
+        }
+
+        /* AI Analysis */
+        .ai-analysis {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #f59e0b;
+        }
+
+        .ai-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brain-icon {
+            font-size: 4em;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .brain-icon.thinking {
+            animation: brainThink 2s infinite;
+        }
+
+        @keyframes brainThink {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+            75% {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+
+        .ai-title {
+            font-size: 1.5em;
+            color: #92400e;
+            margin-top: 10px;
+        }
+
+        .metric {
+            margin-bottom: 25px;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-weight: bold;
+            color: #78350f;
+            font-size: 1.05em;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #92400e;
+            font-size: 1.2em;
+        }
+
+        .metric-description {
+            font-size: 0.85em;
+            color: #92400e;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        .progress-fill.igg {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+        }
+
+        .progress-fill.igm {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .progress-fill.confidence {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #4338ca;
+        }
+
+        .status-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .status-dot.active {
+            background: #48bb78;
+            box-shadow: 0 0 15px rgba(72, 187, 120, 0.6);
+            animation: dotPulse 1.5s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        /* Result Container */
+        .result-container {
+            margin-top: 40px;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            border: 4px solid;
+        }
+
+        .result-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-container.protected {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border-color: #10b981;
+        }
+
+        .result-container.unprotected {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-color: #f59e0b;
+        }
+
+        .result-container.infected {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-color: #ef4444;
+        }
+
+        .result-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: resultFloat 2s infinite;
+        }
+
+        @keyframes resultFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .result-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-container.protected .result-title {
+            color: #047857;
+        }
+
+        .result-container.unprotected .result-title {
+            color: #d97706;
+        }
+
+        .result-container.infected .result-title {
+            color: #dc2626;
+        }
+
+        .result-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #374151;
+        }
+
+        .result-confidence {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Regras antigas dos info-cards foram removidas, pois agora são concept-cards */
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-panel {
+                order: 1;
+            }
+
+            .test-section {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-container {
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            .flow-step {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 Como Funciona o Teste de Sorologia com Inteligência Artificial</h1>
+            <p>Entenda o processo completo de análise de forma simples e visual</p>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar">
+                
+                <div class="concept-card">
+                    <h3>👤 Status do Paciente</h3>
+                    <div class="status-box">
+                        <div>
+                            <span class="status-dot waiting" id="statusDotSidebar"></span>
+                            <span id="patientStatusSidebar">Aguardando análise</span>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 0.9rem;">
+                            <div>💉 Amostra: 40 μL</div>
+                            <div>⏱️ Tempo: ~20 min</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>🦠 O que são Antígenos?</h3>
+                    <p style="margin-bottom: 15px; font-size: 0.9rem; color: #666;">Pedaços do vírus SARS-CoV-2 usados no teste:</p>
+                    <div class="concept-item">
+                        <strong>Spike (S1/S2)</strong>
+                        <small>A "chave" que o vírus usa para entrar nas células</small>
+                    </div>
+                    <div class="concept-item">
+                        <strong>RBD-1 e RBD-2</strong>
+                        <small>Parte específica da proteína Spike</small>
+                    </div>
+                    <div class="concept-item">
+                        <strong>Nucleocapsídeo</strong>
+                        <small>Proteína interna do vírus</small>
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <h3>🧬 O que são Anticorpos?</h3>
+                    <p style="margin-bottom: 15px; font-size: 0.9rem; color: #666;">Proteínas de defesa criadas pelo corpo:</p>
+                    <div class="concept-item">
+                        <strong>IgM (Imunoglobulina M)</strong>
+                        <small>Resposta rápida. Aparece primeiro na infecção (5-7 dias)</small>
+                    </div>
+                    <div class="concept-item">
+                        <strong>IgG (Imunoglobulina G)</strong>
+                        <small>Proteção duradoura. Aparece depois (10-14 dias) e fica meses/anos</small>
+                    </div>
+                </div>
+                
+                <div class="concept-card concept-card-content">
+                    <h3><span class="new-card-title">🎯</span> Teste Multiplexado</h3>
+                    <p>Detecta simultaneamente múltiplos anticorpos usando 5 proteínas diferentes do vírus SARS-CoV-2 para análise completa.</p>
+                </div>
+                
+                <div class="concept-card concept-card-content">
+                    <h3><span class="new-card-title">📱</span> Leitura Óptica</h3>
+                    <p>Utiliza smartphone para capturar imagens, tornando o teste portátil e acessível em qualquer lugar.</p>
+                </div>
+                
+                <div class="concept-card concept-card-content">
+                    <h3><span class="new-card-title">🧠</span> Inteligência Artificial</h3>
+                    <p>Rede neural analisa padrões complexos com 89.5% de precisão, reduzindo erros e fornecendo diagnóstico confiável.</p>
+                </div>
+
+            </div>
+
+            <div class="main-panel">
+            <h2 class="simulation-title">🧪 Simulação Interativa do Teste</h2>
+            <p class="simulation-subtitle">Veja passo a passo como a IA detecta anticorpos contra COVID-19</p>
+
+            <div class="flow-container">
+                <div class="flow-step" data-step="1">
+                    <div class="flow-icon">💉</div>
+                    <div class="flow-label">Coleta</div>
+                </div>
+                <div class="flow-step" data-step="2">
+                    <div class="flow-icon">🧪</div>
+                    <div class="flow-label">Reação</div>
+                </div>
+                <div class="flow-step" data-step="3">
+                    <div class="flow-icon">📸</div>
+                    <div class="flow-label">Captura</div>
+                </div>
+                <div class="flow-step" data-step="4">
+                    <div class="flow-icon">🧠</div>
+                    <div class="flow-label">IA Analisa</div>
+                </div>
+                <div class="flow-step" data-step="5">
+                    <div class="flow-icon">✅</div>
+                    <div class="flow-label">Resultado</div>
+                </div>
+            </div>
+
+            <button class="start-button" id="startButton">
+                <span>▶️ Iniciar Simulação</span>
+            </button>
+
+            <div class="status-indicator">
+                <span id="statusText">Aguardando Análise</span>
+                <div class="status-dot" id="statusDot"></div>
+            </div>
+
+            <div class="test-section">
+                <div class="test-plate-container">
+                    <h3>Placa de Teste (25 pontos)</h3>
+                    <p class="test-explanation">
+                        Cada círculo representa um ponto onde anticorpos reagem com antígenos do vírus. Verde = anticorpo detectado ✓
+                    </p>
+                    <div class="antigen-labels">
+                        <span class="antigen-tag">🦠 S1/S2</span>
+                        <span class="antigen-tag">🦠 RBD-1</span>
+                        <span class="antigen-tag">🦠 RBD-2</span>
+                        <span class="antigen-tag">🦠 N-Protein</span>
+                    </div>
+                    <div class="test-plate" id="testPlate"></div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot positive"></div>
+                            <span>Positivo (anticorpo presente)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot negative"></div>
+                            <span>Negativo (sem anticorpo)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-analysis">
+                    <div class="ai-header">
+                        <div class="brain-icon" id="brainIcon">🧠</div>
+                        <div class="ai-title">IA Analisando</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-header">
+                            <span class="metric-label">🔬 Nível de IgG</span>
+                            <span class="metric-value" id="iggPercent">0%</span>
+                        </div>
+                        <div class="metric-description">Imunidade de longa duração (meses/anos)</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill igg" id="iggBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-header">
+                            <span class="metric-label">🔬 Nível de IgM</span>
+                            <span class="metric-value" id="igmPercent">0%</span>
+                        </div>
+                        <div class="metric-description">Infecção recente/ativa (dias/semanas)</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill igm" id="igmBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-header">
+                            <span class="metric-label">🎯 Confiança da IA</span>
+                            <span class="metric-value" id="confidencePercent">0%</span>
+                        </div>
+                        <div class="metric-description">Certeza do diagnóstico</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill confidence" id="confidenceBar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-icon">⏳</div>
+                <div class="result-title">Aguardando Análise</div>
+                <div class="result-description">
+                    Clique em "Iniciar Simulação" para começar a demonstração
+                </div>
+            </div>
+        </div>
+        
+        </div>
+
+    <script>
+        const scenarios = [
+            {
+                name: 'Protegido',
+                pattern: [1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0],
+                result: 'protected',
+                icon: '🛡️',
+                title: 'PROTEGIDO',
+                description: 'IgG presente e IgM ausente indicam imunidade estabelecida! Você desenvolveu proteção duradoura através de vacinação ou infecção anterior. Seu corpo "lembra" do vírus.',
+                igg: 85,
+                igm: 15,
+                confidence: 92
+            },
+            {
+                name: 'Sem Proteção',
+                pattern: [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+                result: 'unprotected',
+                icon: '⚠️',
+                title: 'SEM PROTEÇÃO',
+                description: 'Níveis baixos de anticorpos IgG e IgM indicam ausência de imunidade detectável. Você nunca foi infectado ou vacinado. Vacinação é fortemente recomendada!',
+                igg: 20,
+                igm: 10,
+                confidence: 88
+            },
+            {
+                name: 'Infectado',
+                pattern: [1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
+                result: 'infected',
+                icon: '🦠',
+                title: 'INFECÇÃO ATIVA',
+                description: 'Presença simultânea de IgG e IgM indica infecção recente ou ativa! Seu corpo está produzindo anticorpos agora. Isolamento e acompanhamento médico são necessários.',
+                igg: 75,
+                igm: 80,
+                confidence: 95
+            }
+        ];
+
+        let isRunning = false;
+        let currentScenario = null;
+
+        function init() {
+            createTestSpots();
+            document.getElementById('startButton').addEventListener('click', startSimulation);
+        }
+
+        function createTestSpots() {
+            const testPlate = document.getElementById('testPlate');
+            for (let i = 0; i < 25; i++) {
+                const spot = document.createElement('div');
+                spot.className = 'test-spot';
+                spot.id = `spot-${i}`;
+                spot.textContent = i + 1;
+                testPlate.appendChild(spot);
+            }
+        }
+
+        function updateStep(stepNumber) {
+            document.querySelectorAll('.flow-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            const activeStep = document.querySelector(`[data-step="${stepNumber}"]`);
+            if (activeStep) {
+                activeStep.classList.add('active');
+            }
+        }
+
+        async function startSimulation() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            const button = document.getElementById('startButton');
+            button.disabled = true;
+            button.querySelector('span').textContent = '⏳ Analisando...';
+            
+            currentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            
+            resetSimulation();
+            
+            try {
+                updateStep(1);
+                document.getElementById('statusText').textContent = 'Coletando amostra de sangue (40 μL)';
+                document.getElementById('statusDot').classList.add('active');
+                document.getElementById('statusDotSidebar').classList.remove('waiting');
+                document.getElementById('statusDotSidebar').classList.add('active');
+                document.getElementById('patientStatusSidebar').textContent = 'Coletando amostra';
+                await sleep(1500);
+                
+                updateStep(2);
+                document.getElementById('statusText').textContent = 'Sangue reagindo com antígenos';
+                document.getElementById('patientStatusSidebar').textContent = 'Processando teste';
+                await animateTestPattern();
+                
+                updateStep(3);
+                document.getElementById('statusText').textContent = 'Smartphone capturando imagem';
+                document.getElementById('patientStatusSidebar').textContent = 'Capturando imagem';
+                await sleep(1500);
+                
+                updateStep(4);
+                document.getElementById('statusText').textContent = 'IA interpretando padrões complexos';
+                document.getElementById('patientStatusSidebar').textContent = 'IA analisando';
+                document.getElementById('brainIcon').classList.add('thinking');
+                await animateAIAnalysis();
+                
+                updateStep(5);
+                document.getElementById('statusText').textContent = 'Diagnóstico concluído!';
+                document.getElementById('patientStatusSidebar').textContent = 'Concluído!';
+                displayResult();
+                
+            } catch (error) {
+                console.error('Erro:', error);
+            } finally {
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.querySelector('span').textContent = '🔄 Nova Simulação';
+                    isRunning = false;
+                }, 2000);
+            }
+        }
+
+        async function animateTestPattern() {
+            const testPlate = document.getElementById('testPlate');
+            testPlate.classList.add('visible');
+            await sleep(600);
+            
+            const spots = document.querySelectorAll('.test-spot');
+            for (let i = 0; i < spots.length; i++) {
+                spots[i].style.transform = 'scale(1.4)';
+                await sleep(60);
+                spots[i].style.transform = 'scale(1)';
+                
+                if (currentScenario.pattern[i] === 1) {
+                    spots[i].classList.add('positive');
+                    spots[i].textContent = '✓';
+                } else {
+                    spots[i].classList.add('negative');
+                    spots[i].textContent = '−';
+                }
+            }
+            await sleep(800);
+        }
+
+        async function animateAIAnalysis() {
+            await sleep(400);
+            await animateBar('iggBar', 'iggPercent', currentScenario.igg, 1200);
+            await sleep(300);
+            await animateBar('igmBar', 'igmPercent', currentScenario.igm, 1200);
+            await sleep(300);
+            await animateBar('confidenceBar', 'confidencePercent', currentScenario.confidence, 1500);
+            await sleep(600);
+        }
+
+        function animateBar(barId, percentId, target, duration) {
+            return new Promise(resolve => {
+                let current = 0;
+                const increment = target / (duration / 30);
+                
+                const interval = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(interval);
+                        resolve();
+                    }
+                    const bar = document.getElementById(barId);
+                    const percent = document.getElementById(percentId);
+                    bar.style.width = current + '%';
+                    bar.textContent = Math.round(current) + '%';
+                    percent.textContent = Math.round(current) + '%';
+                }, 30);
+            });
+        }
+
+        function displayResult() {
+            const container = document.getElementById('resultContainer');
+            container.className = `result-container ${currentScenario.result} show`;
+            container.innerHTML = `
+                <div class="result-icon">${currentScenario.icon}</div>
+                <div class="result-title">${currentScenario.title}</div>
+                <div class="result-description">${currentScenario.description}</div>
+                <div class="result-confidence">
+                    <strong>Confiança da IA: ${currentScenario.confidence}%</strong>
+                </div>
+            `;
+            document.getElementById('brainIcon').classList.remove('thinking');
+        }
+
+        function resetSimulation() {
+            const testPlate = document.getElementById('testPlate');
+            testPlate.classList.remove('visible');
+            
+            document.querySelectorAll('.test-spot').forEach((spot, index) => {
+                spot.className = 'test-spot';
+                spot.textContent = index + 1;
+                spot.style.transform = 'scale(1)';
+            });
+            
+            ['iggBar', 'igmBar', 'confidenceBar'].forEach(id => {
+                const bar = document.getElementById(id);
+                bar.style.width = '0%';
+                bar.textContent = '';
+            });
+            
+            ['iggPercent', 'igmPercent', 'confidencePercent'].forEach(id => {
+                document.getElementById(id).textContent = '0%';
+            });
+            
+            document.querySelectorAll('.flow-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            document.getElementById('statusDot').classList.remove('active');
+            document.getElementById('statusDotSidebar').classList.remove('active');
+            document.getElementById('statusDotSidebar').classList.add('waiting');
+            document.getElementById('patientStatusSidebar').textContent = 'Aguardando análise';
+            document.getElementById('brainIcon').classList.remove('thinking');
+            
+            const container = document.getElementById('resultContainer');
+            container.className = 'result-container';
+            container.innerHTML = `
+                <div class="result-icon">⏳</div>
+                <div class="result-title">Aguardando Análise</div>
+                <div class="result-description">
+                    Clique em "Iniciar Simulação" para começar a demonstração
+                </div>
+            `;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
