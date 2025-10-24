@@ -26,14 +26,10 @@ O que você encontrará neste repositório:
 | `relatorio.md` | Relatório final do projeto ou evento. |
 | `cronograma.pdf` | Cronograma de atividades da semana. |
 
-## 🛠️ Tecnologias Utilizadas (Opcional)
+## 🛠️ Tecnologias Utilizadas 
 
-Liste as principais tecnologias, linguagens ou ferramentas usadas no desenvolvimento do projeto ou material.
+* [HTML, CSS, JavaScript]
 
-* [Ex: HTML, CSS, JavaScript]
-* [Ex: Arduino, Raspberry Pi]
-* [Ex: Python (para análise de dados)]
-* [Ex: Figma (para design)]
 
 ## 🚀 Como Visualizar (Para projetos interativos ou código)
 
